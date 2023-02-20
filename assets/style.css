@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: "Chocolate Cookies";
+    src: url('Chocolate Cookies.ttf')
+}
+
+body {
+    background: #e18c97;
+}
+
+h1 {
+    font-size: 50px;
+    color: white;
+    font-family: "Chocolate Cookies", serif;
+}
+/* NAV BAR */
+    /* POSITION & PADDING NAV */
+.nav {
+    display: flex;
+    justify-content: end;
+    margin: 1rem;
+}
+.nav > a {
+    margin-right: 1rem;
+}
+    /* STYLE BUTTONS */
+#btn-register, #btn-connection, #btn-deconnection {
+    border: 1px solid pink;
+    border-radius: 3px;
+    padding: 5px;
+    color: white;
+
+}
+
+#btn-register:hover, #btn-connection:hover, #btn-deconnection {
+    background: pink;
+    transition: 200ms ease-in;
+    color: white;
+}
+
+/* BODY */
+
+    /* DIV TITLE */
+#title-div {
+    display: flex;
+    justify-content: center;
+}
+
+    /* FORMS */
+
+label {
+    color: white;
+}
+input {
+    padding: 0.3rem;
+    border: 1px solid pink;
+}
+
+button {
+    padding: 0.3rem;
+    border: 1px solid pink;
+    border-radius: 3px;
+    background: #e18c97;
+    color: white;
+}
+
+button:hover {
+    background: pink;
+    transition: 200ms ease-in;
+    color: white;
+}
+
+
