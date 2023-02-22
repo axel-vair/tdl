@@ -76,3 +76,20 @@ button:hover {
 }
 
 
+/* CONTAINER TODO */
+
+#container-todo {
+    margin: 0 50px;
+}
+    /* LIST STYLE */
+#list-todo {
+    list-style: none;
+}
+
+#list-todo li::before {
+    content: 'todo';
+}
+
+#list-todo li.checked::before {
+    content: 'done';
+}

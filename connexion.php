@@ -9,7 +9,6 @@ if (isset($_POST['login']) && isset($_POST['password']) && !empty($_POST['login'
     $password = htmlspecialchars($_POST['password']);
     $new_connection = new User();
     echo $new_connection->connection($login, $password);
-
     // die pour éviter que le json ne soit corrompu par le html
     die();
 

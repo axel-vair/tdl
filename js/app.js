@@ -1,10 +1,11 @@
 /* Pointe les différents éléments du DOM */
-
 const btnRegister = document.getElementById('btn-register')
 const btnConnection = document.getElementById('btn-connection')
 const spanMessage = document.getElementById('registerSuccess')
+const btnAdd = document.getElementById('submit')
 
 /* Premier écouteur qui va permettre d'afficher le formulaire d'inscription sur l'index */
+if(btnRegister != null){
 btnRegister.addEventListener('click', async () => {
     await fetch('inscription.php')
         /* Promesse qui va retourner la page */
@@ -48,6 +49,7 @@ btnRegister.addEventListener('click', async () => {
     })
 
 })
+}
 
 const displayNav = async () => {
     // console.log(text);
@@ -58,9 +60,6 @@ const displayNav = async () => {
     // Option #1
     const headerEl = document.querySelector('header');
     headerEl.innerHTML = headerHTML;
-
-
-
 };
 
 const removeBodyContent = () => {
@@ -68,50 +67,86 @@ const removeBodyContent = () => {
     bodyContent.innerHTML = "";
 };
 
-btnConnection.addEventListener('click', async() => {
-    await fetch('connexion.php')
-        .then((response) => {
-            return response.text()
-        })
-        .then((content) => {
-            const divConnection = document.getElementById('forms')
-            divConnection.innerHTML = content;
-            let formConnection = document.querySelector('#form-connection')
-            formConnection.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const myConnectionForm = new FormData(formConnection);
-                fetch('connexion.php', {
-                    method: "POST",
-                    body: myConnectionForm
+if(btnConnection != null) {
+    btnConnection.addEventListener('click', async () => {
+        await fetch('connexion.php')
+            .then((response) => {
+                return response.text()
+            })
+            .then((content) => {
+                const divConnection = document.getElementById('forms')
+                divConnection.innerHTML = content;
+                let formConnection = document.querySelector('#form-connection')
+                formConnection.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const myConnectionForm = new FormData(formConnection);
+                    fetch('connexion.php', {
+                        method: "POST",
+                        body: myConnectionForm
+                    })
+                        .then((response_connect) => {
+                            if ((response_connect.ok)) {
+                                return response_connect.json();
+                            }
+                        })
+                        .then((contentResponse_connect) => {
+
+                            if (contentResponse_connect['reponse'] === "ok") {
+                                document.getElementById('registerSuccess').innerHTML = contentResponse_connect['reussite'];
+                                spanMessage.innerText = contentResponse_connect['reussite'];
+                                window.location.replace("todolist.php");
+                                let headerEl = document.querySelector('header');
+                                headerEl.setAttribute('connected', '');
+                                displayNav();
+                                removeBodyContent();
+
+                            } else {
+                                document.getElementById('registerSuccess').innerHTML = contentResponse_connect['echoue']
+                                spanMessage.innerText = contentResponse_connect['echoue'];
+                            }
+
+
+                        })
+
                 })
-                    .then((response_connect) => {
-                        if((response_connect.ok)){
-                            return response_connect.json();
-                        }
-                    })
-                    .then((contentResponse_connect) => {
 
-                        if(contentResponse_connect['reponse'] === "ok"){
-                            document.getElementById('registerSuccess').innerHTML = contentResponse_connect['reussite'];
-                            spanMessage.innerText = contentResponse_connect['reussite'];
-                            window.location.replace("todolist.php", 2);
-                            let headerEl = document.querySelector('header');
-                            headerEl.setAttribute('connected', '');
-                            displayNav();
-                            removeBodyContent();
-
-                        }else{
-                            document.getElementById('registerSuccess').innerHTML = contentResponse_connect['echoue']
-                            spanMessage.innerText = contentResponse_connect['echoue'];
-                        }
-
-
-                    })
 
             })
 
 
-        })
+    })
+}
+/* TODO LIST */
+
+const todoDiv = document.getElementById('list-todo'); // pointe sur la div Todo
+const todoForm = document.getElementById('todo-form'); // pointe sur le formulaire
+fetch("todolist.php?getTodo=all")
+    .then((response) => {
+        if (response.ok)
+        {
+            return response.json();
+        }
+    })
+
+    .then((content) => {
+
+            let li = document.createElement("li"); // on crée un li à chaque clique
+            content.forEach(element => {
+                todoDiv.append(li.innerText = element.content);
+                todoDiv.append(li.innerText = element.creation);
+            });
+
+    })
 
 
-})
+const todoDone = document.getElementById('done');
+todoDiv.addEventListener('click', (ev) => { //on écoute la div
+    if (ev.target.tagName === 'LI') { // on target chaque element qui est un li
+        ev.target.classList.toggle('checked'); // on ajoute la classe checked à chaque element cliqué
+        todoDone.appendChild(ev.target);
+    }
+});
+
+
+
+// Si le LI possède une classe nommée 'checked' alors on change le li de DIV.

@@ -91,6 +91,7 @@
             if (password_verify($password, $hashedPassword)) {
                 session_start();
                 $_SESSION['login'] = $login;
+                $_SESSION['id'] = $results['id'];
                 return json_encode(['reponse' => "ok", 'reussite' => 'connexion réussie']);
 
             }

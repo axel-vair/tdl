@@ -1,4 +1,18 @@
 <?php
+session_start();
+require_once 'src/Todo.php';
+if(isset($_POST['input_todo'])){
+    $content = $_POST['input_todo'];
+    $id_user = $_SESSION['id'];
+    $todo = new Todo();
+    $todo->todoInsert($content, $id_user);
+}
+
+if(isset($_GET['getTodo']) && $_GET['getTodo']='all'){
+    $todo = new Todo();
+    $todo->displayTodo();
+}
+
 
 ?>
 
@@ -16,6 +30,7 @@
 <body>
 <?php
 require_once "includes/header.php";
+
 ?>
 
 <div>
@@ -29,5 +44,28 @@ require_once "includes/header.php";
     <h1>Ma TODO LIST</h1>
 </div>
 
+<div id="container-todo">
+    <section>
+        <form method="post" id="todo-form">
+            <label for="input_todo">Tâches à réaliser :</label>
+            <input id="input_todo" name="input_todo" type="text">
+            <button id="submit" type="submit">Ajouter</button>
+        </form>
+    </section>
+    <section>
+        <h2>A faire:</h2>
+        <ul id="list-todo">
+
+        </ul>
+
+    </section>
+    <section>
+        <h2>Tâches terminées :</h2>
+        <ul id="done">
+
+        </ul>
+
+    </section>
+</div>
 </body>
 </html>
