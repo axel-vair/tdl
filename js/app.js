@@ -67,6 +67,8 @@ const removeBodyContent = () => {
     bodyContent.innerHTML = "";
 };
 
+
+
 if(btnConnection != null) {
     btnConnection.addEventListener('click', async () => {
         await fetch('connexion.php')
@@ -116,37 +118,88 @@ if(btnConnection != null) {
 
     })
 }
+
+
 /* TODO LIST */
 
-const todoDiv = document.getElementById('list-todo'); // pointe sur la div Todo
+
 const todoForm = document.getElementById('todo-form'); // pointe sur le formulaire
-fetch("todolist.php?getTodo=all")
-    .then((response) => {
-        if (response.ok)
-        {
-            return response.json();
+const todoUl = document.getElementById('list-todo'); // pointe sur la div Todo
+
+// Fonction qui va permettre d'afficher un todo
+function displayTodo(content) {
+    // On pointe sur la class Done
+    const todoDone = document.getElementById('done');
+    // On crée une div
+    let todoDiv = document.createElement("div");
+    // On crée une li
+    let li = document.createElement("li");
+    // On crée un span
+    let span = document.createElement("span");
+    // La li est l'enfant de la div
+    todoDiv.appendChild(li);
+    // Le span l'enfant de la div
+    todoDiv.appendChild(span);
+    //On ajoute une classe à la div "todoDiv"
+    todoDiv.classList.add("todoDiv");
+    // On ajoute à la li le contenu "content"de la réponse
+    li.textContent = content.content;
+    // On ajoute au span le contenu de "creation" de la réponse
+    span.textContent = content.creation;
+    todoUl.appendChild(todoDiv);
+
+    //on écoute la div
+    todoDiv.addEventListener('click', (ev) => {
+        // on target chaque element qui est un li
+        if (ev.target.tagName === 'DIV') {
+            // on ajoute la classe checked à chaque element cliqué
+            ev.target.classList.toggle('checked');
+            todoDone.appendChild(ev.target);
         }
+    });
+}
+
+function getTasks(){
+    //fetch de la page
+    fetch("todolist.php?getTodo=all")
+        .then((response) => {
+            if (response.ok)
+            {
+                return response.json();
+            }
+        })
+        //then qui va lancer la fonction displayTodos
+        .then((contents) => {
+            //fonction qui va display toutes les tâches
+            function displayTodos() {
+                for (const content of contents) {
+                    displayTodo(content);
+                }
+            }
+            displayTodos(contents);
+        });
+
+}
+
+//écoute du formulaire d'envoie
+todoForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    let data = new FormData(todoForm);
+    //fetch de la page afin d'envoyer les informations dans la BDD
+    fetch("todolist.php", {
+        method: "POST",
+        body: data,
     })
-
-    .then((content) => {
-
-            let li = document.createElement("li"); // on crée un li à chaque clique
-            content.forEach(element => {
-                todoDiv.append(li.innerText = element.content);
-                todoDiv.append(li.innerText = element.creation);
-            });
-
-    })
-
-
-const todoDone = document.getElementById('done');
-todoDiv.addEventListener('click', (ev) => { //on écoute la div
-    if (ev.target.tagName === 'LI') { // on target chaque element qui est un li
-        ev.target.classList.toggle('checked'); // on ajoute la classe checked à chaque element cliqué
-        todoDone.appendChild(ev.target);
-    }
+        //promesse qui va permettre de return un json
+        .then((response) => {
+            if(response.ok){
+                return response.json();
+            }
+        })
+        //promesse qui va enclencher la fonction getTasks()
+        .then((content) => {
+          getTasks(content);
+        });
 });
 
-
-
-// Si le LI possède une classe nommée 'checked' alors on change le li de DIV.
+getTasks();

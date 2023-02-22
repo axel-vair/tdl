@@ -6,11 +6,15 @@ if(isset($_POST['input_todo'])){
     $id_user = $_SESSION['id'];
     $todo = new Todo();
     $todo->todoInsert($content, $id_user);
+    die();
+
 }
 
 if(isset($_GET['getTodo']) && $_GET['getTodo']='all'){
     $todo = new Todo();
     $todo->displayTodo();
+    die();
+
 }
 
 

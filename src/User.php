@@ -34,7 +34,9 @@
             $login = htmlspecialchars($_POST['login']);
             $pass1 = htmlspecialchars($_POST['password']);
 
-            $sql = 'SELECT * FROM utilisateurs WHERE login = :login';
+            $sql = 'SELECT * 
+                    FROM utilisateurs 
+                    WHERE login = :login';
             $sql_exe = $this->db->prepare($sql);// so prepare request for search if login is taken
             $sql_exe->bindParam(':login', $login);
             $sql_exe->execute();
@@ -54,7 +56,8 @@
     public function register($login, $password)
     {
         if (!$this->verifUser()) {
-            $sql = "INSERT INTO utilisateurs (login, password) VALUES (:login, :password)";
+            $sql = "INSERT INTO utilisateurs (login, password) 
+                    VALUES (:login, :password)";
             $sql_insert = $this->db->prepare($sql);
             $sql_insert->execute([
                 'login' => htmlspecialchars($login),
@@ -75,7 +78,9 @@
     public function connection($login, $password)
     {
         // query qui vient selectionner les infos là où le login et le mdp correspondent avec l'objet courant
-        $sql_verify = "SELECT * FROM utilisateurs WHERE login = :login";
+        $sql_verify = " SELECT * 
+                        FROM utilisateurs 
+                        WHERE login = :login";
         $sql_verify_exe = $this->db->prepare($sql_verify);
         $sql_verify_exe->execute([
             'login' => $login,

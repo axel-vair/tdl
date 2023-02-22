@@ -82,14 +82,26 @@ button:hover {
     margin: 0 50px;
 }
     /* LIST STYLE */
-#list-todo {
+#list-todo, #done {
     list-style: none;
+
 }
 
 #list-todo li::before {
-    content: 'todo';
+    /*content: 'X';*/
 }
 
-#list-todo li.checked::before {
-    content: 'done';
+#done li.checked::before {
+    /*content: 'V';*/
+}
+
+.todoDiv {
+    display: flex;
+    background: red;
+
+}
+
+li {
+    background: deeppink;
+    margin-right: 10px;
 }
