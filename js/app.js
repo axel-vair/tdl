@@ -52,12 +52,9 @@ btnRegister.addEventListener('click', async () => {
 }
 
 const displayNav = async () => {
-    // console.log(text);
 
     let response = await fetch('./includes/header.php?textOnly');
     let headerHTML = await response.text();
-
-    // Option #1
     const headerEl = document.querySelector('header');
     headerEl.innerHTML = headerHTML;
 };
@@ -126,29 +123,44 @@ if(btnConnection != null) {
 const todoForm = document.getElementById('todo-form'); // pointe sur le formulaire
 const todoUl = document.getElementById('list-todo'); // pointe sur la div Todo
 
-// Fonction qui va permettre d'afficher un todo
+/* FONCTION D'AFFICHAGE DE LA TODO */
 function displayTodo(content) {
-    // On pointe sur la class Done
+
+    /*  TAG DES ELEMENTS  */
+
     const todoDone = document.getElementById('done');
-    // On crée une div
-    let todoDiv = document.createElement("div");
-    // On crée une li
-    let li = document.createElement("li");
-    // On crée un span
-    let span = document.createElement("span");
-    // La li est l'enfant de la div
+
+
+    /* CREATION DES ELEMENTS */
+
+    const todoDiv = document.createElement("div");
+    const li = document.createElement("li");
+    const span = document.createElement("span");
+    const spanDelete = document.createElement("span");
+    const btnDelete = document.createElement("button");
+    btnDelete.setAttribute('id', content.id) // IMPORTANT!
+
+    /* APPEND DES ELEMENTS */
+
     todoDiv.appendChild(li);
-    // Le span l'enfant de la div
     todoDiv.appendChild(span);
-    //On ajoute une classe à la div "todoDiv"
-    todoDiv.classList.add("todoDiv");
-    // On ajoute à la li le contenu "content"de la réponse
-    li.textContent = content.content;
-    // On ajoute au span le contenu de "creation" de la réponse
-    span.textContent = content.creation;
+    todoDiv.appendChild(spanDelete);
+    spanDelete.appendChild(btnDelete);
     todoUl.appendChild(todoDiv);
 
-    //on écoute la div
+    /* AJOUT DES CLASSES */
+
+    todoDiv.classList.add("todoDiv");
+    spanDelete.classList.add("btn-delete");
+
+    /* INNER DES ELEMENTS */
+
+    btnDelete.innerText = "Supprimer";
+    li.textContent = content.content;
+    span.textContent = content.creation;
+
+
+    /* ECOUTE DE LA DIV POUR CHANGER LES ELEMENTS DE PLACE AU CLIQUE */
     todoDiv.addEventListener('click', (ev) => {
         // on target chaque element qui est un li
         if (ev.target.tagName === 'DIV') {
@@ -157,6 +169,19 @@ function displayTodo(content) {
             todoDone.appendChild(ev.target);
         }
     });
+
+    btnDelete.addEventListener('click', (ev) => {
+
+        deleteTask(ev.target.id);
+        const task = ev.target;
+        todoDiv.remove(ev.target.id)
+    })
+}
+
+function displayTodos(contents) {
+    for (const content of contents) {
+        displayTodo(content);
+    }
 }
 
 function getTasks(){
@@ -171,11 +196,6 @@ function getTasks(){
         //then qui va lancer la fonction displayTodos
         .then((contents) => {
             //fonction qui va display toutes les tâches
-            function displayTodos() {
-                for (const content of contents) {
-                    displayTodo(content);
-                }
-            }
             displayTodos(contents);
         });
 
@@ -198,8 +218,19 @@ todoForm.addEventListener("submit", (e) => {
         })
         //promesse qui va enclencher la fonction getTasks()
         .then((content) => {
-          getTasks(content);
+            displayTodo(content);
         });
 });
 
 getTasks();
+
+
+/* FONCTION POUR DELETE LES TÂCHES */
+async function deleteTask(taskId){
+   await fetch(`todolist.php?delete=${taskId}`)
+        .then((response) => {
+            if(response.ok)
+            return response.json();
+        })
+
+}

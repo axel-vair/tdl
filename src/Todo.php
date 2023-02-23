@@ -31,6 +31,7 @@ class Todo
     public function todoInsert($content, $id_user)
     {
         if (isset($_POST['input_todo'])) {
+            // Requête SQL qui va insérer todolist
             $sql = "INSERT INTO 
                     todolist (creation, content, id_user, status) 
                     VALUES (now(), :content, :id_user, false)";
@@ -40,8 +41,13 @@ class Todo
                 'id_user' => $id_user,
             ]);
 
-            $insert_result = $sql_insert->fetchAll(PDO::FETCH_ASSOC);
-            echo json_encode($insert_result);
+            $display_exe = $this->db->prepare('SELECT LAST_INSERT_ID()');
+            $display_exe->execute();
+            $result_exe = (int)($display_exe->fetch())[0];
+            $taskId = $this->db->prepare('SELECT * FROM todolist WHERE id = :id');
+            $taskId->execute(['id' => $result_exe]);
+            $taskDisplay = $taskId->fetch(PDO::FETCH_ASSOC);
+            echo json_encode($taskDisplay);
         }
     }
 
@@ -56,17 +62,14 @@ class Todo
         $result = $display->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
 
-
     }
 
-    public function deleteTask(){
-        $sql = "SELECT *
-                FROM utilisateurs 
-                INNER JOIN todolist 
-                ON id = id_user";
-        $sql_exe = $this->db->prepare($sql);
-        $sql_exe->execute();
-        $sql_exe = $sql_exe->fetchAll(PDO::FETCH_ASSOC);
+    public function deleteTask(int $id_task){
 
+        $delete = "DELETE FROM todolist WHERE todolist.id = :id_task";
+        $sql_exe = $this->db->prepare($delete);
+        $sql_exe->execute([
+        'id_task' => $id_task]);
+        echo json_encode(['response' => 'suppression réussie']);
     }
 }

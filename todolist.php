@@ -4,19 +4,22 @@ require_once 'src/Todo.php';
 if(isset($_POST['input_todo'])){
     $content = $_POST['input_todo'];
     $id_user = $_SESSION['id'];
-    $todo = new Todo();
-    $todo->todoInsert($content, $id_user);
+    $insert_todo = new Todo();
+    $insert_todo->todoInsert($content, $id_user);
     die();
-
 }
 
-if(isset($_GET['getTodo']) && $_GET['getTodo']='all'){
+if(isset($_GET['getTodo']) && $_GET['getTodo'] == 'all'){
     $todo = new Todo();
     $todo->displayTodo();
     die();
-
 }
 
+if (isset($_GET['delete'])) {
+    $delete = new Todo();
+    $delete->deleteTask((int) $_GET['delete']);
+    die();
+}
 
 ?>
 
