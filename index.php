@@ -26,6 +26,7 @@ require_once "includes/header.php";
     <!-- Span qui accueille les messages d'échecs et de réussites JS -->
     <span id="registerSuccess"></span>
 
+
 </div>
 
 </body>

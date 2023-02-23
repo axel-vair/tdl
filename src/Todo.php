@@ -44,13 +44,27 @@ class Todo
             $display_exe = $this->db->prepare('SELECT LAST_INSERT_ID()');
             $display_exe->execute();
             $result_exe = (int)($display_exe->fetch())[0];
-            $taskId = $this->db->prepare('SELECT * FROM todolist WHERE id = :id');
+            $taskId = $this->db->prepare('SELECT * 
+                                                FROM todolist 
+                                                WHERE id = :id');
             $taskId->execute(['id' => $result_exe]);
             $taskDisplay = $taskId->fetch(PDO::FETCH_ASSOC);
             echo json_encode($taskDisplay);
         }
     }
 
+    public function todoUpdate(int $id_task){
+        $update = "UPDATE  
+                   todolist 
+                   SET todolist.status = :status
+                   WHERE todolist.id = :id_task";
+
+        $update_exe = $this->db->prepare($update);
+        $update_exe->execute([
+            'status' => 1,
+            'id_task' => $id_task]);
+        echo json_encode(['response' => 'update réussie']);
+    }
     public function displayTodo(){
         $id_user = $_SESSION['id'];
         $display = $this->db->prepare("SELECT * 
@@ -66,7 +80,8 @@ class Todo
 
     public function deleteTask(int $id_task){
 
-        $delete = "DELETE FROM todolist WHERE todolist.id = :id_task";
+        $delete = "DELETE FROM todolist 
+                   WHERE todolist.id = :id_task";
         $sql_exe = $this->db->prepare($delete);
         $sql_exe->execute([
         'id_task' => $id_task]);

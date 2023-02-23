@@ -15,9 +15,15 @@ if(isset($_GET['getTodo']) && $_GET['getTodo'] == 'all'){
     die();
 }
 
-if (isset($_GET['delete'])) {
+if(isset($_GET['delete'])) {
     $delete = new Todo();
     $delete->deleteTask((int) $_GET['delete']);
+    die();
+}
+
+if(isset($_GET['update'])){
+    $update = new Todo();
+    $update->todoUpdate((int) $_GET['update']);
     die();
 }
 
@@ -30,6 +36,7 @@ if (isset($_GET['delete'])) {
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css" integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="assets/style.css" rel="stylesheet" type="text/css">
     <script src="js/app.js" defer></script>
     <title>Ma Todo List</title>

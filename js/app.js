@@ -134,6 +134,7 @@ function displayTodo(content) {
     /* CREATION DES ELEMENTS */
 
     const todoDiv = document.createElement("div");
+    const spanCheck = document.createElement("span");
     const li = document.createElement("li");
     const span = document.createElement("span");
     const spanDelete = document.createElement("span");
@@ -144,18 +145,19 @@ function displayTodo(content) {
 
     todoDiv.appendChild(li);
     todoDiv.appendChild(span);
+    todoDiv.appendChild(spanCheck)
     todoDiv.appendChild(spanDelete);
     spanDelete.appendChild(btnDelete);
     todoUl.appendChild(todoDiv);
 
     /* AJOUT DES CLASSES */
-
+    spanCheck.classList.add("check-task")
     todoDiv.classList.add("todoDiv");
     spanDelete.classList.add("btn-delete");
 
     /* INNER DES ELEMENTS */
-
-    btnDelete.innerText = "Supprimer";
+    spanCheck.innerHTML = '<i class="fa-regular fa-square"></i>';
+    btnDelete.innerHTML = '<i class="fa-sharp fa-solid fa-trash-check"></i>'
     li.textContent = content.content;
     span.textContent = content.creation;
 
@@ -163,7 +165,7 @@ function displayTodo(content) {
     /* ECOUTE DE LA DIV POUR CHANGER LES ELEMENTS DE PLACE AU CLIQUE */
     todoDiv.addEventListener('click', (ev) => {
         // on target chaque element qui est un li
-        if (ev.target.tagName === 'DIV') {
+        if (ev.target.tagName === 'SPAN') {
             // on ajoute la classe checked à chaque element cliqué
             ev.target.classList.toggle('checked');
             todoDone.appendChild(ev.target);
@@ -176,6 +178,13 @@ function displayTodo(content) {
         const task = ev.target;
         todoDiv.remove(ev.target.id)
     })
+
+    todoDiv.addEventListener('click', (ev) => {
+        updateTask(ev.target.id);
+
+    })
+
+
 }
 
 function displayTodos(contents) {
@@ -226,11 +235,20 @@ getTasks();
 
 
 /* FONCTION POUR DELETE LES TÂCHES */
-async function deleteTask(taskId){
-   await fetch(`todolist.php?delete=${taskId}`)
+async function deleteTask(taskId) {
+    await fetch(`todolist.php?delete=${taskId}`)
         .then((response) => {
-            if(response.ok)
-            return response.json();
+            if (response.ok)
+                return response.json();
         })
 
+}
+
+/* FONCTION POUR UPDATE LE STATUS */
+async function updateTask(taskId) {
+    await fetch(`todolist.php?update=${taskId}`)
+        .then((response) => {
+            if (response.ok)
+                return response.json();
+        })
 }

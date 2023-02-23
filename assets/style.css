@@ -84,15 +84,18 @@ button:hover {
     /* LIST STYLE */
 #list-todo, #done {
     list-style: none;
+    font-family: Geneva, serif;
 
 }
 
-#list-todo li::before {
-    /*content: 'X';*/
+#list-todo li::after {
+    margin-left: 10px;
+    content: '- ajouté le';
 }
 
-#done li.checked::before {
-    /*content: 'V';*/
+#done li::after {
+    margin-left: 10px;
+    content: '- ajouté le';
 }
 
 .todoDiv {
@@ -104,4 +107,13 @@ button:hover {
 li {
     background: deeppink;
     margin-right: 10px;
+}
+
+.fa-regular.fa-square {
+    font-size: 25px;
+    margin-right: 10px;
+}
+
+.check-task {
+    margin-left: 10px;
 }
