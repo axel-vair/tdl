@@ -7,6 +7,13 @@ const btnAdd = document.getElementById('submit')
 /* Premier écouteur qui va permettre d'afficher le formulaire d'inscription sur l'index */
 if(btnRegister != null){
 btnRegister.addEventListener('click', async () => {
+
+    /* STYLE FORMS REGISTER & CONNECTION */
+    const divForm = document.getElementById('forms');
+    divForm.style.background = "#f1a9b4";
+    divForm.style.padding = "20px";
+    divForm.style.borderRadius = "3px";
+
     await fetch('inscription.php')
         /* Promesse qui va retourner la page */
         .then((response) => {
@@ -68,6 +75,11 @@ const removeBodyContent = () => {
 
 if(btnConnection != null) {
     btnConnection.addEventListener('click', async () => {
+        const divForm = document.getElementById('forms');
+        divForm.style.background = "#f1a9b4";
+        divForm.style.padding = "20px";
+        divForm.style.borderRadius = "3px";
+
         await fetch('connexion.php')
             .then((response) => {
                 return response.text()
@@ -118,8 +130,6 @@ if(btnConnection != null) {
 
 
 /* TODO LIST */
-
-
 const todoForm = document.getElementById('todo-form'); // pointe sur le formulaire
 const todoUl = document.getElementById('list-todo'); // pointe sur la div Todo
 
@@ -127,64 +137,75 @@ const todoUl = document.getElementById('list-todo'); // pointe sur la div Todo
 function displayTodo(content) {
 
     /*  TAG DES ELEMENTS  */
-
     const todoDone = document.getElementById('done');
 
-
     /* CREATION DES ELEMENTS */
-
     const todoDiv = document.createElement("div");
-    const spanCheck = document.createElement("span");
-    const li = document.createElement("li");
+    const spanCheck = document.createElement("button");
+    const todoItem = document.createElement("li");
     const span = document.createElement("span");
     const spanDelete = document.createElement("span");
     const btnDelete = document.createElement("button");
+    const dateFinish = document.createElement("span");
     btnDelete.setAttribute('id', content.id) // IMPORTANT!
+    spanCheck.setAttribute('id', content.id) // IMPORTANT !
+
+    /* CURSOR */
+    btnDelete.style.cursor = "pointer";
+    spanCheck.style.cursor = "pointer";
 
     /* APPEND DES ELEMENTS */
-
-    todoDiv.appendChild(li);
+    todoDiv.appendChild(todoItem);
     todoDiv.appendChild(span);
     todoDiv.appendChild(spanCheck)
     todoDiv.appendChild(spanDelete);
     spanDelete.appendChild(btnDelete);
-    todoUl.appendChild(todoDiv);
+    todoDiv.appendChild(dateFinish);
+
+
+    /* SI LE STATUT EST EGAL A 0 ALORS ON APPREND A LA DIV "A FAIRE" */
+    if(content.status === 0 ){
+        todoUl.appendChild(todoDiv);
+    }else{
+        todoDone.appendChild(todoDiv);
+        spanCheck.remove()
+    }
 
     /* AJOUT DES CLASSES */
-    spanCheck.classList.add("check-task")
+    // spanCheck.classList.add("check-task")
     todoDiv.classList.add("todoDiv");
     spanDelete.classList.add("btn-delete");
+    btnDelete.classList.add("delete");
+    spanCheck.classList.add("check");
+    span.classList.add("date");
+    dateFinish.classList.add("dateFinish");
 
     /* INNER DES ELEMENTS */
-    spanCheck.innerHTML = '<i class="fa-regular fa-square"></i>';
-    btnDelete.innerHTML = '<i class="fa-sharp fa-solid fa-trash-check"></i>'
-    li.textContent = content.content;
+    spanCheck.innerHTML = '<i class="fa-regular fa-square-check"></i>';
+    btnDelete.innerHTML = '<i class="fa-solid fa-trash"></i>' /*  */
+    todoItem.textContent = content.content;
     span.textContent = content.creation;
+    dateFinish.textContent = content.finish;
 
 
     /* ECOUTE DE LA DIV POUR CHANGER LES ELEMENTS DE PLACE AU CLIQUE */
-    todoDiv.addEventListener('click', (ev) => {
-        // on target chaque element qui est un li
-        if (ev.target.tagName === 'SPAN') {
-            // on ajoute la classe checked à chaque element cliqué
-            ev.target.classList.toggle('checked');
-            todoDone.appendChild(ev.target);
-        }
+    spanCheck.addEventListener('click', (ev) => {
+        // on ajoute la classe checked à chaque element cliqué
+        ev.target.classList.toggle('checked');
+        todoDone.appendChild(ev.target.closest('.todoDiv'));
+        spanCheck.remove()
     });
 
     btnDelete.addEventListener('click', (ev) => {
 
-        deleteTask(ev.target.id);
-        const task = ev.target;
+        deleteTask(content.id);
         todoDiv.remove(ev.target.id)
     })
 
-    todoDiv.addEventListener('click', (ev) => {
-        updateTask(ev.target.id);
+    spanCheck.addEventListener('click', (evn) => {
+        updateTask(content.id);
 
     })
-
-
 }
 
 function displayTodos(contents) {
@@ -206,6 +227,7 @@ function getTasks(){
         .then((contents) => {
             //fonction qui va display toutes les tâches
             displayTodos(contents);
+
         });
 
 }
@@ -228,6 +250,8 @@ todoForm.addEventListener("submit", (e) => {
         //promesse qui va enclencher la fonction getTasks()
         .then((content) => {
             displayTodo(content);
+            let inputTodo = document.getElementById('input_todo')
+            inputTodo.value = "";
         });
 });
 
@@ -241,7 +265,6 @@ async function deleteTask(taskId) {
             if (response.ok)
                 return response.json();
         })
-
 }
 
 /* FONCTION POUR UPDATE LE STATUS */

@@ -55,6 +55,10 @@
 
     public function register($login, $password)
     {
+        if (strlen($login) <= 3) { // vérifie que le login est plus long que 3 caractères
+            echo json_encode(['response' => "not ok", 'echoue' => 'Le login doit contenir au moins 4 caractères']);
+            return;
+        }
         if (!$this->verifUser()) {
             $sql = "INSERT INTO utilisateurs (login, password) 
                     VALUES (:login, :password)";
@@ -63,11 +67,10 @@
                 'login' => htmlspecialchars($login),
                 'password' => password_hash($password, PASSWORD_BCRYPT),
             ]);
-
             if ($sql_insert) {
                 // json qui va permettre de vérifier que la réponse est OK, si c'est le cas, on affiche inscription réussie
                 echo json_encode(['response' => "ok", 'reussite' => 'Inscription réussie !']);
-            } else {
+            } else if($sql_insert) {
                 echo json_encode(['response' => "not ok", 'echoue' => 'L\'inscription a échoué']);
             }
         } else {
@@ -107,6 +110,14 @@
 
     }
 
+    public function isConnected()
+    {
+        if(isset($_SESSION['login'])){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public function deconnect()
     {
         unset($_SESSION['login']);

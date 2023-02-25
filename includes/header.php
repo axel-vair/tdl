@@ -1,22 +1,24 @@
 <?php
 
 $getHeader = function($isConnected) {
-    $header = "<header><nav class='nav'><a href='' class='nav-link'>Accueil</a><a href='todolist.php' class='nav-link'>Todo List</a>";
+    $header = "<header><div><nav class='nav'><div id='logo'>Make a Cake</div>";
 
     if (!$isConnected) {
         $header .= "
-        <a role='button' id='btn-register'>Inscription</a>
-        <a role='button' id='btn-connection'>Connexion</a>";
+        <div>
+            <a role='button' id='btn-register'>Inscription</a>
+            <a role='button' id='btn-connection'>Connexion</a>
+        </div>";
+
     } else {
         $header .= "
-        <a class='nav-link''>Profil</a>
-        <a href='logout.php' id='btn-deconnection'>Deconnexion</a>
+            <div><a href='logout.php' id='btn-deconnection'>Deconnexion</a></div>
         ";
     }
 
     // finish it
 
-    $header .= "</ul></nav></header>";
+    $header .= "</div></nav></header>";
 
     return $header;
 };

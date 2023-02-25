@@ -53,38 +53,46 @@ class Todo
         }
     }
 
-    public function todoUpdate(int $id_task){
-        $update = "UPDATE  
-                   todolist 
-                   SET todolist.status = :status
-                   WHERE todolist.id = :id_task";
-
-        $update_exe = $this->db->prepare($update);
-        $update_exe->execute([
-            'status' => 1,
-            'id_task' => $id_task]);
-        echo json_encode(['response' => 'update réussie']);
-    }
-    public function displayTodo(){
+    public function displayTodo(string|int $status){
         $id_user = $_SESSION['id'];
-        $display = $this->db->prepare("SELECT * 
-                                             FROM todolist 
-                                             WHERE id_user = :id_user");
-        $display->execute([
-            'id_user' => $id_user,
-        ]);
+        $sql = 'SELECT *  FROM todolist WHERE id_user = :id_user';
+        $dataParam = ['id_user' => $id_user];
+        if($status == 0 || $status == 1){
+            $sql .= ' AND status = :status';
+            $dataParam['status'] = (int)$status;
+        }
+        $display = $this->db->prepare($sql);
+        $display->execute($dataParam);
+
         $result = $display->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
 
     }
 
+    public function todoUpdate(int $id_task, $finish){
+        $update = "UPDATE  
+                   todolist 
+                   SET todolist.status = :status,
+                       todolist.finish = :finish
+                   WHERE todolist.id = :id_task";
+
+        $update_exe = $this->db->prepare($update);
+        $update_exe->execute([
+            'status' => 1,
+            'id_task' => $id_task,
+            'finish' => $finish
+        ]);
+        echo json_encode(['response' => 'update réussie']);
+    }
+
     public function deleteTask(int $id_task){
 
         $delete = "DELETE FROM todolist 
-                   WHERE todolist.id = :id_task";
+                   WHERE id = :id_task";
         $sql_exe = $this->db->prepare($delete);
         $sql_exe->execute([
         'id_task' => $id_task]);
         echo json_encode(['response' => 'suppression réussie']);
     }
 }
+

@@ -18,9 +18,9 @@ if (isset($_POST['login']) && isset($_POST['password']) && !empty($_POST['login'
 <h1>Connexion</h1>
 <form id="form-connection" method="post">
     <label for="login">Login</label>
-    <input id="login" name="login" type="text">
+    <input id="login" name="login" type="text" required>
     <label for="password">Mot de passe</label>
-    <input id="password" name="password" type="password">
+    <input id="password" name="password" type="password" required>
     <button type="submit" id="connect_form_button" name="submit">Se connecter</button>
 </form>
 
