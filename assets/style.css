@@ -194,8 +194,12 @@ li {
 
     /* FORM */
 
-#container-todo {
-    
+#login {
+    width: 100%;
+}
+
+#password {
+    width: 100%;
 }
 #container-form {
     display: flex;
